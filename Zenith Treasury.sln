@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34616.47
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zenith Treasury", "Zenith Treasury\Zenith Treasury.csproj", "{DB1BC018-F852-4A01-A749-B4D8CF681B5F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DB1BC018-F852-4A01-A749-B4D8CF681B5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB1BC018-F852-4A01-A749-B4D8CF681B5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB1BC018-F852-4A01-A749-B4D8CF681B5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB1BC018-F852-4A01-A749-B4D8CF681B5F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EAFCA4B7-BD12-4F66-B0FB-9BCAEC4B470D}
+	EndGlobalSection
+EndGlobal
