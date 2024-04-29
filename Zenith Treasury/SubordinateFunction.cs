@@ -165,7 +165,7 @@ namespace Zenith_Treasury
 
         public Tuple<bool, string> IsAdmin(string identifier, string pin)
         {
-            string sqlSelectAdmin = "SELECT COUNT(*), Name FROM Administrator WHERE Username = @Username AND Password = @Password";
+            string sqlSelectAdmin = "SELECT COUNT(*), UserID, Name FROM Administrator WHERE Username = @Username AND Password = @Password";
 
             try
             {
@@ -181,6 +181,10 @@ namespace Zenith_Treasury
                         {
                             int count = Convert.ToInt32(reader[0]);
                             string adminName = reader["Name"].ToString();
+                            if (count > 0)
+                            {
+                                CurrentUserID = reader["UserID"].ToString(); // Store the admin ID
+                            }
                             return Tuple.Create(count > 0, adminName);
                         }
                     }
@@ -195,6 +199,7 @@ namespace Zenith_Treasury
 
             return Tuple.Create(false, "");
         }
+
 
         public bool PerformTransaction(string userID, string transactionType, decimal amount)
         {
@@ -579,32 +584,34 @@ namespace Zenith_Treasury
 
             try
             {
-                // Check if currentUserID is not null
-                if (currentUserID != null)
+                using (MySqlConnection connection = OpenConnection())
                 {
-                    using (MySqlConnection connection = OpenConnection())
+                    // Check if the currentUserID is less than 1000
+                    if (currentUserID.Contains("-"))
                     {
+                        // If the userID is for a regular user, get the name from the User_Accounts table
                         sqlSelectName = "SELECT Name FROM User_Accounts WHERE UserID = @UserID";
+                    }
+                    else
+                    {
+                        // If the userID is for an admin, get the name from the Administrator table
+                        sqlSelectName = "SELECT Name FROM Administrator WHERE UserID = @UserID";
+                    }
 
-                        using (MySqlCommand command = new MySqlCommand(sqlSelectName, connection))
+                    using (MySqlCommand command = new MySqlCommand(sqlSelectName, connection))
+                    {
+                        command.Parameters.AddWithValue("@UserID", currentUserID);
+                        object result = command.ExecuteScalar();
+                        if (result != null)
                         {
-                            command.Parameters.AddWithValue("@UserID", currentUserID);
-                            object result = command.ExecuteScalar();
-                            if (result != null)
-                            {
-                                return result.ToString();
-                            }
-                            else
-                            {
-                                MessageBox.Show("Failed to retrieve current name.");
-                                return string.Empty;
-                            }
+                            return result.ToString();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Failed to retrieve current name.");
+                            return string.Empty;
                         }
                     }
-                }
-                else
-                {
-                    return "Administrator"; // Return "Administrator" if currentUserID is null
                 }
             }
             catch (Exception ex)
@@ -613,10 +620,6 @@ namespace Zenith_Treasury
                 return string.Empty;
             }
         }
-
-
-
-
 
 
         private void ExportChartToSheet(Chart chart, Excel.Workbook workbook, string sheetName, string chartName)
@@ -667,16 +670,6 @@ namespace Zenith_Treasury
                 MessageBox.Show("Error exporting chart to Excel: " + ex.Message, "Export Chart", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
-
-
-
-
-
-
-
-
-
 
 
 
